@@ -1,4 +1,4 @@
-class Creator{
+export class Creator{
 	static createChart(props){
        if(props.type == "line")
           return LineChartCreator.createChart(props);  
@@ -6,5 +6,3 @@ class Creator{
           return PieChartCreator.createChart(props);
     }
 }
-
-// export default Creator;

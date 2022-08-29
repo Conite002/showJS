@@ -1,0 +1,30 @@
+{
+  "name": "showjs-v2",
+  "version": "1.0.0",
+  "description": "\"vizualise data\"",
+  "main": "",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "module": "./index.js",
+  "exports" : {
+    "landmark":{
+      "import" :"./index.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Conite002/showJS.git"
+  },
+  "author": "ayaGroup",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Conite002/showJS/issues"
+  },
+  "homepage": "https://github.com/Conite002/showJS#readme"
+}

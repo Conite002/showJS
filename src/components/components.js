@@ -1,6 +1,7 @@
-// import Creator from "./creator.js";
+import { Creator } from "./creator.js";
 
-class Component{
+
+export class Component{
     constructor(name="name of component", props={}){
         this.id =1;
         this.name = name;
@@ -14,5 +15,3 @@ class Component{
         console.log("Draw components");
     }
 }
-
-// export default Component;

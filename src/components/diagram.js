@@ -1,6 +1,6 @@
-// import Component from "./components.js";
+import { Component } from './components.js';
 
-class Diagram{
+export class Diagram{
     constructor(props = {} , legend = {}){
         this.props = props;
         this.legend = legend;
@@ -8,8 +8,5 @@ class Diagram{
     }
 }
 
-
 const x = 1000;
 export {x};
-
-// export default Diagram;
