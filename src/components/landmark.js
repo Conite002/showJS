@@ -8,6 +8,6 @@ export class Landmark{
 		this.legends = props.legends;
 		this.display_graduations = graduation;
 		this.diagram = new Diagram(this.props, this.legends);
-		console.log("landmark sexy Jutsu");
+		console.log(this);
 	}
 }
