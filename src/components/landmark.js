@@ -1,18 +1,16 @@
 
 export class Landmark{
-    constructor(x_box, y_box, width, height, prop = {}, display_graduations = { x : false, y : false }){
-        this.x0 = x_box;
-        this.y0 = y_box;
-        this.width = width;
-        this.height = height;
+    constructor(position = { x : 0, y : 0 } , dimension = { width : 0, height : 0 }, prop = {}, display_graduations = { x : false, y : false }){
+        this.position = position;
+        this.dimension = dimension;
         this.x_axis = "";
         this.y_axis = "";
         this.display_graduations = display_graduations;
         if(prop.x){ 
             if(typeof prop[prop.x][0] == "string")
-                this.x_pas_min = this.width / prop[prop.x].length;
+                this.minStepX = this.dimension.width / prop[prop.x].length;
             else
-                this.x_pas_min = 1;
+                this.minStepX = 1;
         }
         else{
             var key;
@@ -21,15 +19,15 @@ export class Landmark{
                     key = v; 
             });
             if(typeof prop[key][0] == "string")
-                this.x_pas_min = this.width / prop[key].length;
+                this.minStepX = this.dimension.width / prop[key].length;
             else
-                this.x_pas_min = 1;
+                this.minStepX = 1;
         }
         if(prop.y ){ 
             if(typeof prop[prop.y][0] == "string")
-                this.y_pas_min = this.height / prop[prop.y].length;
+                this.minStepY = this.dimension.height / prop[prop.y].length;
             else
-                this.y_pas_min = 1;
+                this.minStepY = 1;
         }
         else{
             var key;
@@ -38,12 +36,11 @@ export class Landmark{
                     key = v; 
             });
             if(typeof prop[key][0] == "string")
-                this.y_pas_min = this.height / prop[key].length;
+                this.minStepY = this.dimension.height / prop[key].length;
             else
-                this.y_pas_min = 1;
+                this.minStepY = 1;
         }
 
-    
         this.y_pas = [];
         this.x_pas = [];
         this.create_y_pas(prop);
@@ -60,15 +57,15 @@ export class Landmark{
                 key_y = v;
         });
 
-        this.x_axis = aya.Polyline([this.x0, this.y0, this.x0 + this.width, this.y0]);
-        this.y_axis = aya.Polyline([this.x0, this.y0, this.x0, this.y0 - this.height]);
+        this.x_axis = aya.Polyline([this.position.x, this.position.y, this.position.x + this.dimension.width, this.position.y]);
+        this.y_axis = aya.Polyline([this.position.x, this.position.y, this.position.x, this.position.y - this.dimension.height]);
         if(this.display_graduations.x){
             for(var i = 0; i < this.x_pas.length; i++){
-                var pl = aya.Polyline([this.x_pas[i], this.y0 - 3, this.x_pas[i], this.y0 + 3]);
+                var pl = aya.Polyline([this.x_pas[i], this.position.y - 3, this.x_pas[i], this.position.y + 3]);
                 if(prop.x)
-                    var text = aya.Text(this.x_pas[i] - prop[prop.x][i].length*5, this.y0 + 15,  prop[prop.x][i]);
+                    var text = aya.Text(this.x_pas[i] - prop[prop.x][i].length*5, this.position.y + 15,  prop[prop.x][i]);
                 else
-                    var text = aya.Text(this.x_pas[i] - prop[key_x][i].length*5, this.y0 + 15,  prop[key_x][i]);
+                    var text = aya.Text(this.x_pas[i] - prop[key_x][i].length*5, this.position.y + 15,  prop[key_x][i]);
                 //var pl = aya.Polyline([0, 0, 0, 0]);
                 pl.addChild(text, (p,c)=>{},null, true);
                 this.x_axis.addChild(pl, (p,c) =>{}, null, true);
@@ -76,11 +73,11 @@ export class Landmark{
         }
         if(this.display_graduations.y){
             for(var i = 0; i < this.y_pas.length; i++){
-                var pc = aya.Polyline([this.x0 -3, this.y_pas[i], this.x0 + 3, this.y_pas[i]]);
+                var pc = aya.Polyline([this.position.x -3, this.y_pas[i], this.position.x + 3, this.y_pas[i]]);
                 if(prop.y)
-                    var text = aya.Text(this.x0 - Math.floor(prop[prop.y][i].length /(2*p )) -15, this.y_pas[i], prop[prop.y][i]);
+                    var text = aya.Text(this.position.x - Math.floor(prop[prop.y][i].length /(2*p )) -15, this.y_pas[i], prop[prop.y][i]);
                 else
-                    var text = aya.Text(this.x0 - Math.floor(prop[key_y][i].length /(2*p)) -15, this.y_pas[i], prop[key_y][i]);
+                    var text = aya.Text(this.position.x - Math.floor(prop[key_y][i].length /(2*p)) -15, this.y_pas[i], prop[key_y][i]);
                 pc.addChild(text, null, null, true);
                 this.y_axis.addChild(pc, (p,c) =>{}, null, true);
             }
@@ -99,7 +96,7 @@ export class Landmark{
                     text.x = this.x_pas[index] - prop[prop.x][index].length*7;
                 else
                     text.x = this.x_pas[index] - prop[key_x][index].length*7;
-                text.y = this.y0 + text.text.length / (2*p);
+                text.y = this.position.y + text.text.length / (2*p);
                 text.setRotateAngle(-45);
                 text.setRotateCenter(text.x, text.y);
                 text.redraw();
@@ -114,18 +111,18 @@ export class Landmark{
         var i, y, tmp, key;
         if(prop.y){
             if(typeof prop[prop.y][0] == "string"){
-                for( i = 0; i < this.height/prop[prop.y].length; i++){
-                    this.y_pas[i] = this.y0 - i*this.y_pas_min;
+                for( i = 0; i < this.dimension.height/prop[prop.y].length; i++){
+                    this.y_pas[i] = this.position.y - i*this.minStepY;
                 }
             }
             else{
-                tmp = this.height / 2;
-                while(tmp > this.y_pas_min ){ 
+                tmp = this.dimension.height / 2;
+                while(tmp > this.minStepY ){ 
                     tmp = tmp / 2;
                 }
                 tmp = tmp*2;
-                y = this.y0;
-                for(i = 0; i < (this.height/tmp); i++){
+                y = this.position.y;
+                for(i = 0; i < (this.dimension.height/tmp); i++){
                     this.y_pas[i] = y;
                     y -= tmp;
                 }
@@ -137,15 +134,15 @@ export class Landmark{
                     key = v;
             });
             if(typeof prop[key][0] == "string")
-                for (i = 0; i < this.height/this.y_pas_min; i++)
-                    this.y_pas[i] = this.y0 - i*this.y_pas_min;
+                for (i = 0; i < this.dimension.height/this.minStepY; i++)
+                    this.y_pas[i] = this.position.y - i*this.minStepY;
             else{
-                tmp = this.height/2;
-                while(tmp > this.y_pas_min)
+                tmp = this.dimension.height/2;
+                while(tmp > this.minStepY)
                     tmp = tmp/2;
                 tmp = tmp*2;
-                for(i = 0; i < (this.height/tmp); i++){
-                    this.y_pas[i] = this.y0 - i*tmp;
+                for(i = 0; i < (this.dimension.height/tmp); i++){
+                    this.y_pas[i] = this.position.y - i*tmp;
                 }
             }
         }        
@@ -155,15 +152,15 @@ export class Landmark{
         var i, tmp, key;
         if(prop.x ){
             if(typeof prop[prop.x][0] == "string")
-                for (i = 0; i < this.width/this.x_pas_min; i++)
-                    this.x_pas[i] = this.x0 + i*this.x_pas_min;
+                for (i = 0; i < this.dimension.width/this.minStepX; i++)
+                    this.x_pas[i] = this.position.x + i*this.minStepX;
             else{
-                tmp = this.width/2;
-                while(tmp > this.x_pas_min)
+                tmp = this.dimension.width/2;
+                while(tmp > this.minStepX)
                     tmp = tmp/2;
                 tmp = tmp*2;
-                for(i = 0; i < (this.width/tmp); i++){
-                    this.x_pas[i] = this.x0 + i*tmp;
+                for(i = 0; i < (this.dimension.width/tmp); i++){
+                    this.x_pas[i] = this.position.x + i*tmp;
                 }
             }
             
@@ -174,15 +171,15 @@ export class Landmark{
                     key = v;
             });
             if(typeof prop[key][0] == "string")
-                for (i = 0; i < this.width/this.x_pas_min; i++)
-                    this.x_pas[i] = this.x0 + i*this.x_pas_min;
+                for (i = 0; i < this.dimension.width/this.minStepX; i++)
+                    this.x_pas[i] = this.position.x + i*this.minStepX;
             else{
-                tmp = this.width/2;
-                while(tmp > this.x_pas_min)
+                tmp = this.dimension.width/2;
+                while(tmp > this.minStepX)
                     tmp = tmp/2;
                 tmp = tmp*2;
-                for(i = 0; i < (this.width/tmp); i++){
-                    this.x_pas[i] = this.x0 + i*tmp;
+                for(i = 0; i < (this.dimension.width/tmp); i++){
+                    this.x_pas[i] = this.position.x + i*tmp;
                 }
             }
            
