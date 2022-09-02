@@ -29,6 +29,7 @@ export class Landmark{
         x_axis = aya.Polyline([this.position.x, this.position.y, this.position.x + this.dimension.width, this.position.y]);
         y_axis = aya.Polyline([this.position.x, this.position.y, this.position.x, this.position.y + (Math.max(data))]);
         // y_axis = aya.Polyline([this.position.x, this.position.y, this.position.x, this.position.y - this.dimension.height]);
+        // y_axis = aya.Polyline([this.position.x, this.position.y, this.position.x, this.position.y - this.dimension.height]);
 
         if(this.display_graduations.x){
             dx_text = 20; dy_text = dy_text = 15
